@@ -22,7 +22,7 @@ let score_audio = new Audio();
 [canvas.width, canvas.height] = [window.innerWidth, window.innerHeight]
 
 fly.src = "audio/fly.mp3";
-score_audio.src = "audio/score.mp3";
+// score_audio.src = "audio/score.mp3";
 
 const btnRestart = {
     width: 290,
@@ -64,8 +64,6 @@ pipe[0] = {
     y: 0
 }
 
-let score = 0;
-
 let xPos = canvas.width / 2;
 let yPos = 150;
 let grav = 1;
@@ -105,6 +103,7 @@ function draw() {
                 setTimeout(function(){ 
                     xPos-= 0.5
                 }, 1 * i)
+                
             }
         }
         if(moveDown){
@@ -156,25 +155,25 @@ function draw() {
             }
 
             pipeBottom.onload = null
-        } 
-
-
-        // if (pipe[i].x == 5) {
-        //     score++;
-        //     score_audio.play();
-        // }
-        if(xPos == pipe[i]){
-            score++
-            score_audio.play()
         }
-
     }
     if(isDied){
+        ctx.save();
         ctx.drawImage(fg, 0, canvas.height - fg.height);
-        ctx.font = `${canvas.height / 55}px Montserrat`
-        ctx.fillText("Game Over", canvas.width / 2 - btnRestart.width / 6, canvas.height / 2 - btnRestart.height / 1.5);
+        ctx.font = `${canvas.height / 40}px Silkscreen`
+        ctx.fillRect(btnRestart.x+10, btnRestart.y, btnRestart.width-20, 10)
+        ctx.fillRect(btnRestart.x+5, btnRestart.y+5, btnRestart.width-10, btnRestart.height-10)
 
-        ctx.fillRect(btnRestart.x, btnRestart.y, btnRestart.width, btnRestart.height)
+
+        ctx.fillRect(btnRestart.x+10, btnRestart.y+btnRestart.height-10, btnRestart.width-20, 10)
+
+      
+        ctx.fillStyle = 'black'
+        ctx.fillText("!Game Over!", (btnRestart.x+btnRestart.width/2)-ctx.measureText("!Game Over!").width/2, canvas.height / 2 - btnRestart.height / 1.5);
+        ctx.fillStyle = 'white'
+        ctx.fillText('Play again', (btnRestart.x+btnRestart.width/2)-ctx.measureText('Play again').width/2, canvas.height/2)
+
+        ctx.restore();
     }
 
     for(let i=0;i<Math.round(canvas.width / 310) + 1;i++){
@@ -189,10 +188,6 @@ function draw() {
     } else {
         ctx.drawImage(bird, xPos, yPos);
     }
-    if(!isDied){
-        ctx.fillText("Score: " + score, 10, canvas.height - 20);
-    }
-
     yPos += grav;
 
     requestAnimationFrame(draw);
