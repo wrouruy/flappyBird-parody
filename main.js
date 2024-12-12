@@ -1,7 +1,6 @@
 let canvas = document.getElementById("canvas");
 let ctx = canvas.getContext("2d");
 
-
 let bird = new Image();
 let bg = new Image();
 let fg = new Image();
@@ -22,7 +21,7 @@ let score_audio = new Audio();
 [canvas.width, canvas.height] = [window.innerWidth, window.innerHeight]
 
 fly.src = "audio/fly.mp3";
-// score_audio.src = "audio/score.mp3";
+score_audio.src = "audio/score.mp3";
 
 const btnRestart = {
     width: 290,
@@ -35,18 +34,20 @@ let moveRight = false
 let moveLeft = false
 let moveDown = false
 document.addEventListener('keydown', function(e){
-    // alert(e.keyCode)
-    if(isDied){ location.reload()
-    } else if(e.keyCode === 68){moveRight = true}
-      else if(e.keyCode === 65){moveLeft = true}
-      else if(e.keyCode === 83){moveDown = true}
-    else if(e.keyCode === 87 || e.keyCode === 32){ moveUp() }
+    if(!isDied){
+        if(e.keyCode === 68){moveRight = true}
+        else if(e.keyCode === 65){moveLeft = true}
+        else if(e.keyCode === 83){moveDown = true}
+      else if(e.keyCode === 87 || e.keyCode === 32){ moveUp() }
+    }
 })
 document.addEventListener('keyup', function(e){
     if(e.keyCode === 68){moveRight = false}
     if(e.keyCode === 65){moveLeft = false}
     if(e.keyCode === 83){moveDown = false}
 })
+
+document.addEventListener('mousedown', function(){moveUp()})
 
 function moveUp() {
     fly.play();
@@ -103,7 +104,6 @@ function draw() {
                 setTimeout(function(){ 
                     xPos-= 0.5
                 }, 1 * i)
-                
             }
         }
         if(moveDown){
@@ -141,8 +141,8 @@ function draw() {
                 if(e.clientX < btnRestart.x + btnRestart.width && e.clientX > btnRestart.x &&
                     e.clientY < btnRestart.y + btnRestart.height && e.clientY > btnRestart.y 
                 ){
-                    canvas.style.cursor = 'pointer'
-                    ctx.fillStyle = '#333'
+                    canvas.style.cursor = 'pointer';
+                    ctx.fillStyle = '#333';
 
                     document.onclick = function(){
                         location.reload()
@@ -160,20 +160,19 @@ function draw() {
     if(isDied){
         ctx.save();
         ctx.drawImage(fg, 0, canvas.height - fg.height);
-        ctx.font = `${canvas.height / 40}px Silkscreen`
-        ctx.fillRect(btnRestart.x+10, btnRestart.y, btnRestart.width-20, 10)
-        ctx.fillRect(btnRestart.x+5, btnRestart.y+5, btnRestart.width-10, btnRestart.height-10)
+        ctx.font = '25px Silkscreen';
+        ctx.fillRect(btnRestart.x+5, btnRestart.y, btnRestart.width-10, 10);
+        ctx.fillRect(btnRestart.x, btnRestart.y+5, btnRestart.width, btnRestart.height-10);
 
-
-        ctx.fillRect(btnRestart.x+10, btnRestart.y+btnRestart.height-10, btnRestart.width-20, 10)
-
+        ctx.fillRect(btnRestart.x+5, btnRestart.y+btnRestart.height-10, btnRestart.width-10, 10)
       
-        ctx.fillStyle = 'black'
+        ctx.fillStyle = 'black';
         ctx.fillText("!Game Over!", (btnRestart.x+btnRestart.width/2)-ctx.measureText("!Game Over!").width/2, canvas.height / 2 - btnRestart.height / 1.5);
-        ctx.fillStyle = 'white'
-        ctx.fillText('Play again', (btnRestart.x+btnRestart.width/2)-ctx.measureText('Play again').width/2, canvas.height/2)
+        ctx.fillStyle = 'white';
+        ctx.fillText('Play again', (btnRestart.x+btnRestart.width/2)-ctx.measureText('Play again').width/2, canvas.height/2);
 
         ctx.restore();
+        grav = 1;
     }
 
     for(let i=0;i<Math.round(canvas.width / 310) + 1;i++){
